@@ -1,7 +1,8 @@
 let express = require('express');
 let app = express();
 // Must have this to read .env file
-require('dotenv').config()
+require('dotenv').config();
+let bodyParser = require('body-parser');
 
 console.log("Hello World");
 
@@ -11,6 +12,9 @@ app.use(function(req, res, next){
     console.log(`${req.method} ${req.path} - ${req.ip}`);
     next();
 })
+
+// Middleware for parsing URL encoded data
+app.use(bodyParser.urlencoded({extended: false}));
 
 // First step
 /*app.get('/', function(req, res){
@@ -45,6 +49,26 @@ app.get("/now", (req, res, next) => {
 });
 
 
+// API with params
+app.get("/:word/echo", (req, res) =>{
+    res.json({"echo": req.params.word})
+})
+
+// API with query
+
+// Query Params
+/*app.post("/name?first=firstname&last=lastname", (req, res) =>{
+    res.json({"name": req.query.first + " " + req.query.last})
+})*/
+
+// URL encoded
+app.post("/name", (req, res) =>{
+    res.json({"name": req.body.first + " " + req.body.last})
+})
+
+app.get("/name", (req, res) =>{
+    res.json({"name": req.query.first + " " + req.query.last})
+})
 
 
 
